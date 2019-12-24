@@ -6,13 +6,13 @@
 
 #include "linux_parser.h"
 
+using std::getline;
+using std::ifstream;
+using std::istringstream;
 using std::stof;
 using std::string;
 using std::to_string;
 using std::vector;
-using std::ifstream;
-using std::istringstream;
-using std::getline;
 
 // An example of how to read data from the filesystem
 string LinuxParser::OperatingSystem() {
@@ -195,8 +195,7 @@ int LinuxParser::RunningProcesses() {
 
 // Read and return the command associated with a process
 string LinuxParser::Command(int pid) {
-  ifstream filestream(kProcDirectory + to_string(pid) +
-                           kCmdlineFilename);
+  ifstream filestream(kProcDirectory + to_string(pid) + kCmdlineFilename);
   if (filestream.is_open()) {
     string line;
     getline(filestream, line);
@@ -215,7 +214,7 @@ string LinuxParser::Ram(int pid) {
   string line, key;
   string key_name = "VmSize:";
   ifstream stream(LinuxParser::kProcDirectory + to_string(pid) +
-                       LinuxParser::kStatusFilename);
+                  LinuxParser::kStatusFilename);
   if (stream.is_open()) {
     while (stream >> key) {
       if (key == "VmSize:") {
@@ -277,14 +276,14 @@ long LinuxParser::UpTime() {
 
 long LinuxParser::UpTime(int pid) {
   ifstream filestream(kProcDirectory + to_string(pid) +
-                           kStatFilename); // see cat /proc/stat and count lines
+                      kStatFilename);  // see cat /proc/stat and count lines
   if (filestream.is_open()) {
     string line, value;
     while (getline(filestream, line)) {
       int arr_counter = 0;
       istringstream linestream(line);
       while (linestream >> value) {
-        if (arr_counter == 13) { // 13 = uptime
+        if (arr_counter == 13) {  // 13 = uptime
           long uptime = stol(value) / sysconf(_SC_CLK_TCK);
           return uptime;
         }
