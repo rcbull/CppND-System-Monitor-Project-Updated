@@ -7,8 +7,8 @@ float Processor::Utilization() {
   float active = LinuxParser::ActiveJiffies();
   float utilization = {0};
 
-  long duration_active{active - active_};
-  long duration_idle{idle - idle_};
+  long duration_active{static_cast<long>(active - active_)};
+  long duration_idle{static_cast<long>(idle - idle_)};
   long duration{duration_active + duration_idle};
   utilization = static_cast<float>(duration_active) / duration;
 
